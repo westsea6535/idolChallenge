@@ -3,7 +3,6 @@
   import NavBar from "$lib/components/navBar.svelte";
   import Chart from "../lib/components/chart.svelte";
 
-
   const apiKey = 'AIzaSyB7hiJ2o-nO0m8C3npBkVfH40p1yhbYgZA';
   let videoData;
   let statisticsData;
@@ -93,7 +92,6 @@
         </div>
       {/each}
     {/if}
-
   </div>
 </div>
 
@@ -116,6 +114,10 @@
   }
   .test img {
     height: 100px;
+  }
+  #videoWrap {
+    height: calc(100vh - 100px);
+    overflow-y: scroll;
   }
 </style>
 

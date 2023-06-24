@@ -3,7 +3,6 @@
   import Chart from 'svelte-frappe-charts';
 
   export let statisticsData;
-
   let data;
 
   afterUpdate(() => {
