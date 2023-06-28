@@ -81,12 +81,12 @@
 </header>
 
 <div id="wrap">
-  <!-- <NavBar />
+  <NavBar />
 
-  <Chart {statisticsData}/> -->
+  <Chart {statisticsData}/>
   
   <div id="videoWrap">
-    <!-- {#if videoData.length}
+    {#if videoData.length}
       {#each videoData as singleKeyData}
         {#each singleKeyData?.items as videoData}
           <div class="test">
@@ -97,7 +97,7 @@
           </div>
         {/each}
       {/each}
-    {/if} -->
+    {/if}
   </div>
 </div>
 
