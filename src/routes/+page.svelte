@@ -1,12 +1,19 @@
 <script>
-  import { onMount } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
   import NavBar from "$lib/components/navBar.svelte";
   import Chart from "../lib/components/chart.svelte";
+  import { selectedList } from '$lib/stores';
 
   const apiKey = 'AIzaSyB7hiJ2o-nO0m8C3npBkVfH40p1yhbYgZA';
-  let videoData;
+  let videoData = [];
   let statisticsData;
   $: statisticsData;
+  $: $selectedList, (async () => {
+      for (let i = 0; i < $selectedList.length; i++) {
+        console.log($selectedList[i]);
+        videoData[i] = await fetchData($selectedList[i]);
+        console.log(videoData[i]);
+    }})();
 
   const fetchStatistics = async (videoId) => {
     const url = new URL('https://www.googleapis.com/youtube/v3/videos');
@@ -14,7 +21,29 @@
       part: 'statistics',
       id: videoId,
     };
-    console.log(url);
+
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        url.searchParams.append(key, params[key]);
+      }
+    }
+    url.searchParams.append('key', apiKey);
+
+    const response = await fetch(url.toString());
+    const data = await response.json();
+    return data;
+  }
+
+  const fetchData = async (keyword) => {
+    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+    const params = {
+      part: 'snippet',
+      q: encodeURIComponent(keyword),
+      maxResults: 50,
+      type: 'video',
+      order: 'viewCount',
+      regionCode: 'KR',
+    };
 
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
@@ -27,52 +56,24 @@
     const data = await response.json();
     console.log(data);
 
-    return data;
-  }
-
-  const fetchData = async () => {
-    const url = new URL('https://www.googleapis.com/youtube/v3/search');
-    const params = {
-      part: 'snippet',
-      q: encodeURIComponent('queencardchallenge'),
-      // q: encodeURIComponent('teddybear_challenge'),
-      maxResults: 50,
-      type: 'video',
-      order: 'viewCount',
-      regionCode: 'KR',
-    };
-
-    for (const key in params) {
-      if (params.hasOwnProperty(key)) {
-        url.searchParams.append(key, params[key]);
-      }
-    }
-
-    url.searchParams.append('key', apiKey);
-
-    console.log(url);
-
-    const response = await fetch(url.toString());
-    const data = await response.json();
-
     const urlJoin = data.items.reduce((accumulator, curr) => `${accumulator}${accumulator ? ',' : ''}${curr.id.videoId}`, '');
-    console.log(urlJoin);
 
     statisticsData = await fetchStatistics(urlJoin);
-
-    console.log(data)
-
     return data;
   }
 
   onMount( async () => {
-    videoData = await fetchData();
-    console.log(videoData);
+    for (let i = 0; i < $selectedList.length; i++) {
+      console.log($selectedList[i]);
+      videoData[i] = await fetchData($selectedList[i]);
+      console.log(videoData[i]);
+    }
   })
+  
 
 </script>
 
-<header>
+<header on:click={() => console.log(videoData)}>
   Idol youtube challenge compare
 </header>
 
@@ -82,14 +83,16 @@
   <Chart {statisticsData}/>
   
   <div id="videoWrap">
-    {#if videoData}
-      {#each videoData?.items as videoData}
-        <div class="test">
-          <a href={`https://www.youtube.com/watch?v=${videoData.id.videoId}`} target="_blank">
-            <img src={videoData.snippet.thumbnails.high.url} alt="">
-          </a>
-          {videoData.snippet.title}
-        </div>
+    {#if videoData.length}
+      {#each videoData as singleKeyData}
+        {#each singleKeyData?.items as videoData}
+          <div class="test">
+            <a href={`https://www.youtube.com/watch?v=${videoData.id.videoId}`} target="_blank">
+              <img src={videoData.snippet.thumbnails.high.url} alt="">
+            </a>
+            {videoData.snippet.title}
+          </div>
+        {/each}
       {/each}
     {/if}
   </div>
@@ -101,6 +104,7 @@
   header {
     background-color: #FF6D60;
     height: 100px;
+    font-family: Pretendard;
   }
   #wrap {
     display: flex;

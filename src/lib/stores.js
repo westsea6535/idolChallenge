@@ -1,3 +1,3 @@
 import { readable, writable } from "svelte/store";
 
-export let selectedList = writable(['test']);
+export let selectedList = writable(['queencardchallenge']);
