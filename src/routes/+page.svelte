@@ -74,16 +74,19 @@
 </script>
 
 <header on:click={() => console.log(videoData)}>
-  Idol youtube challenge compare
+  <div id="title">
+    아이돌 챌린지 유튜브 쇼츠
+  </div>
+  <div id="name">20210771 소프트웨어학부 김서해</div>
 </header>
 
 <div id="wrap">
-  <NavBar />
+  <!-- <NavBar />
 
-  <Chart {statisticsData}/>
+  <Chart {statisticsData}/> -->
   
   <div id="videoWrap">
-    {#if videoData.length}
+    <!-- {#if videoData.length}
       {#each videoData as singleKeyData}
         {#each singleKeyData?.items as videoData}
           <div class="test">
@@ -94,7 +97,7 @@
           </div>
         {/each}
       {/each}
-    {/if}
+    {/if} -->
   </div>
 </div>
 
@@ -105,6 +108,17 @@
     background-color: #FF6D60;
     height: 100px;
     font-family: Pretendard;
+    padding: 10px;
+  }
+  header #title {
+    font-size: 30px;
+    font-weight: 800;
+    color: #222;
+  }
+  header #name {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
   }
   #wrap {
     display: flex;
